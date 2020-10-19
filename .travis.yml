@@ -7,7 +7,7 @@ install:
   - npm ci
 
 script:
-  - npm
+  - npm test
 
 deploy:
   provider: heroku
