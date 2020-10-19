@@ -3,7 +3,6 @@ const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const API = require("./src/API.js");
 const cors = require("cors");
-const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const mongoDB = require("./src/mongoDB")();
 const app = express();
