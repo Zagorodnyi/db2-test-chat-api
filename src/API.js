@@ -25,7 +25,7 @@ router.get("/messages/list/:index", async (req, res) => {
       .limit(10)
       .exec();
     if (list.length === 0) {
-      return res.status(200).json({ message: "No more messages" });
+      return res.status(404).json({ message: "No more messages" });
     } else {
       return res.status(200).json({ list });
     }
@@ -79,7 +79,7 @@ router.get("/messages/list-in-range/:index", async (req, res) => {
         .exec();
 
       if (list.length === 0) {
-        return res.status(200).json({ message: "There are no messages" });
+        return res.status(404).json({ message: "There are no messages" });
       } else {
         return res.status(200).json({ list });
       }
@@ -97,7 +97,7 @@ router.get("/messages/search", async (req, res) => {
     const list = await Message.find().where("text", regex).exec();
 
     if (list.length === 0) {
-      return res.status(200).json({
+      return res.status(404).json({
         message: `There is no messages found with ${req.query.searchParams}`,
       });
     } else {

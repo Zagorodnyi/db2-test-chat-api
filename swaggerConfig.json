@@ -1,0 +1,416 @@
+{
+"openapi": "3.0.0",
+"info": {
+    "title": "Chat API",
+    "description": "Chat API documentation",
+    "conacts": "Viacheslav Zahorodnyi"
+  },
+"paths": {
+  "/api/messages/list": {
+    "get": {
+    "summary": "Use to request a list of all messages",
+     "responses": {
+      "200": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#components/schemas/list"
+            }
+          }
+        }
+      }, 
+      "500": {
+        "description": "Failed request (server side)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#components/schemas/Error"
+            }
+          }
+        }
+      }
+     }
+    }
+  },
+"/api/messages/list/{index}": {
+    "parameters": [
+      {
+        "in": "path",
+        "name": "index",
+        "required": true,
+        "description": "Page select",
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 10
+          
+          }
+        }
+    ],
+    "get":{
+      "summary": "Use to request a list of messages limited to 10 per page",
+      "responses": {
+        "200": {
+          "description":"OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/list"
+              }
+            }
+          }
+        },
+        "404": {
+          "description":"No messages found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/ResponseMessage"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Failed request (server side)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+"/api/messages/list-in-range/{index}?startDate={startDate}&endDate={endDate}": {
+    "parameters": [
+      {
+        "in": "path",
+        "name": "index",
+        "required": true,
+        "description": "Page select",
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 10
+          
+          }
+        },
+        {
+          "in": "query",
+          "name": "startDate",
+          "required": true,
+          "description": "Start date range (YYYY/MM/DD)",
+          "schema": {
+            "type": "string"
+          }
+          },
+          {
+            "in": "query",
+            "name": "endDate",
+            "required": true,
+            "description": "End date range (YYYY/MM/DD)",
+            "schema": {
+              "type": "string"
+              }
+            }
+    ],
+    "get":{
+      "summary": "Use to request a list of messages in specific date range limited to 10 per page",
+      "responses": {
+        "200": {
+          "description":"OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/list"
+              }
+            }   
+          }
+        },
+        "404": {
+          "description":"No messages found in such range",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/ResponseMessage"
+              }
+            }
+          }
+        },
+        "400": {
+          "description":"Client side error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Error"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Failed request (server side)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+ "/api/messages/single/{id}": {
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "description": "Message id",
+        "schema": {
+          "type": "string"
+          }
+        }
+    ],
+    "get":{
+      "summary": "Use to request single message by ID",
+      "responses": {
+        "200": {
+          "description":"OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Message"
+              }
+            }
+          }
+        },
+        "404": {
+          "description":"No message found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/ResponseMessage"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Failed request (server side)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/messages/search?searchParams={searchParams}": {
+    "parameters": [
+      {
+        "in": "query",
+        "name": "searchParams",
+        "required": true,
+        "description": "Search string",
+        "schema": {
+          "type": "string"
+          }
+        }
+    ],
+    "get":{
+      "summary": "Use to found matches in text fields.",
+      "responses": {
+        "200": {
+          "description":"OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/list"
+              }
+            }
+          }
+        },
+        "404": {
+          "description":"No message found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/ResponseMessage"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Failed request (server side)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/messages/create": {
+    "post":{
+      "summary": "Use to create new message",
+      "requestBody": {
+        "required": true,
+        "content":{
+          "application/json": {
+            "schema": {
+              "$ref": "#components/schemas/NewMessage"
+            },
+            "example": {
+              "author": "Max",
+              "text": "Some message text here.",
+              "email": "max101@gmail.com"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description":"OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/ResponseMessage"
+              }
+            }
+          }
+        },
+        "400": {
+          "description":"Wrong input data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/BadRequest"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Failed request (server side)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+},
+
+"components": {
+  "schemas": {
+    "Message": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "email":{
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "NewMessage": {
+      "type": "object",
+      "required": [
+        "author", "text", "email"
+      ],
+      "properties": {
+        "author": {
+          "readOnly": false,
+          "default": "Max",
+          "type": "string",
+          "name": "author"
+        },
+        "text": {
+          "type": "string",
+          "default": "Some text here",
+          "name": "text",
+          "maxLength": 100
+        },
+        "email":{
+          "type": "string",
+          "default": "max101@gmail.com",
+          "name": "email"
+        }
+      }
+    },
+    "ResponseMessage": {
+      "type":"object",
+      "properties": {
+        "message": {
+          "type":"string"
+        }
+      }
+    },
+
+    "list": {
+      "type": "array",
+      "items": {
+        "$ref": "#components/schemas/Message"
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "RangeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "BadRequest": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "object",
+          "properties":{
+            "fieldName": {
+              "type": "string",
+              "description": "Error related to specific field"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+}
+

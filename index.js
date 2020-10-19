@@ -3,10 +3,13 @@ const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const API = require("./src/API.js");
 const cors = require("cors");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 const mongoDB = require("./src/mongoDB")();
 const app = express();
 const dotenv = require("dotenv").config();
 const port = process.env.PORT || 3000;
+const swaggerOptions = require("./swaggerConfig.json");
 
 // MiddleWare
 app.use(helmet());
@@ -20,6 +23,10 @@ app.use(cors());
 
 // Endpoints
 app.use("/api", API);
-app.get("/", (req, res) => res.send("Hello World!"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerOptions));
+
+app.get("/", (req, res) => {
+  res.redirect("/api-docs");
+});
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
