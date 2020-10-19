@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - 14
+cache: npm
+
+install:
+  - npm ci
+
+script:
+  - npm
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: $HEROKU
+  app: chatroom-test
