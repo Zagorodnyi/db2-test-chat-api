@@ -1,7 +1,7 @@
 //
 
 module.exports = class Message {
-  constructor({ text, author, email }) {
+  constructor({ text = "", author = "", email = "" }) {
     this.text = text;
     this.email = email;
     this.author = author;

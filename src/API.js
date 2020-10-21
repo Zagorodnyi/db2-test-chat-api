@@ -6,7 +6,7 @@ const Message = require("./models/Message");
 // Get list of all messages
 router.get("/messages/list", async (req, res) => {
   try {
-    const list = await Message.find();
+    const list = await Message.find().sort({ createdAt: -1 });
     return res.status(200).json({ list });
   } catch (err) {
     console.log(err);
@@ -20,7 +20,7 @@ router.get("/messages/list/:index", async (req, res) => {
 
   try {
     const list = await Message.find()
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .skip(skipAmount)
       .limit(10)
       .exec();
@@ -41,7 +41,7 @@ router.get("/messages/single/:id", async (req, res) => {
     const message = await Message.findById(req.params.id);
 
     if (!message) {
-      return res.status(404).json("No message with such ID");
+      return res.status(404).json({ message: "No message with such ID" });
     } else {
       return res.status(200).json({ message });
     }
@@ -60,10 +60,10 @@ router.get("/messages/list-in-range/:index", async (req, res) => {
   if (!start || !end) {
     return res.status(400).json({ error: "Incorrect range" });
   } else {
-    const startDate = new Date(req.query.startDate).toISOString();
-    const endDate = new Date(req.query.endDate + " 23:59:59").toISOString();
-
     try {
+      const startDate = new Date(req.query.startDate).toISOString();
+      const endDate = new Date(req.query.endDate + " 23:59:59").toISOString();
+
       const list = await Message.find()
         .where({
           createdAt: {

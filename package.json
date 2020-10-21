@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test-node": "nodemon index.js",
+    "test": "mocha --exit",
     "start": "node index.js"
   },
   "author": "Viacheslav Zahorodnyi",
@@ -22,6 +23,10 @@
     "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.5"
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.0",
+    "nodemon": "^2.0.5",
+    "supertest": "^5.0.0"
   }
 }
